@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "271659040435",
+    "firebase_url": "https://photobook-new.firebaseio.com",
+    "project_id": "photobook-new",
+    "storage_bucket": "photobook-new.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271659040435:android:7ed6794fd2534e3f",
+        "android_client_info": {
+          "package_name": "cornelltech.cwkj.photobook_new"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "271659040435-4g1337hin27hk7c0hiica7gmu15pqaqb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cornelltech.cwkj.photobook_new",
+            "certificate_hash": "2549f2736c23ed239c0ec947afb8a58f74d4e178"
+          }
+        },
+        {
+          "client_id": "271659040435-bgrlbivjro8vcshvd4rqmnpc2eilcss1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQouaTo3TCgcm57C0KlLZMOjh9wwzDuFY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "271659040435-bgrlbivjro8vcshvd4rqmnpc2eilcss1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
