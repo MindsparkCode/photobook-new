@@ -37,4 +37,10 @@
         android:text="Show Image"
         android:onClick="btnShowListImage_Click"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:onClick="btnLogin_Click"/>
+
 </LinearLayout>

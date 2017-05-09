@@ -134,4 +134,9 @@ public class MainActivity extends AppCompatActivity {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
+
+    public void btnLogin_Click(View v) {
+        Intent i = new Intent(MainActivity.this,GoogleSignInActivity.class);
+        startActivity(i);
+    }
 }
