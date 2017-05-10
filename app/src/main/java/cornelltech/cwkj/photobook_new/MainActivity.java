@@ -9,9 +9,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
@@ -21,10 +21,13 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -36,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtImageName;
     private Uri imgUri;
 
+    private FirebaseUser mUser;
+
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
 
-    public static final String FB_STORAGE_PATH = "image/";
+//    public static final String FB_STORAGE_PATH = "image/";
     public static final String FB_DATABASE_PATH = "image";
     public static final int REQUEST_CODE = 39734;
+    public String storage_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.imageView);
         txtImageName = (EditText) findViewById(R.id.txtImageName);
+
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
     }
 
     public void btnBrowse_Click(View v) {
@@ -67,17 +76,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("VisibleForTests")
-    public void btnUpload_Click(View v) {
+    public void btnUploadPublic_Click(View v) {
+        StorageMetadata mUploadImageMetadata = new StorageMetadata.Builder()
+                .setCustomMetadata("User", "UNKNOWN")
+                .setCustomMetadata("Permission", "public")
+                .setCustomMetadata("Uri", imgUri.toString())
+                .setCustomMetadata("Description", txtImageName.getText().toString())
+                .build();
+        UploadPhotos("public/", mUploadImageMetadata);
+    }
+
+    public void btnUploadPrivate_Click(View v) {
+        StorageMetadata mUploadImageMetadata = new StorageMetadata.Builder()
+                .setCustomMetadata("User", mUser.getUid())
+                .setCustomMetadata("Permission", "private")
+                .setCustomMetadata("Uri", imgUri.toString())
+                .setCustomMetadata("Description", txtImageName.getText().toString())
+                .build();
+        UploadPhotos("private/" +  mUser.getUid() + "/", mUploadImageMetadata);
+
+    }
+
+    public void UploadPhotos(String storage_path, StorageMetadata mUploadImageMetadata) {
+
         if (imgUri != null) {
             final ProgressDialog dialog = new ProgressDialog(this);
-            dialog.setTitle("Uploading Image");
+            dialog.setTitle("Uploading a Public Image");
             dialog.show();
 
-            StorageReference ref = mStorageRef.child(FB_STORAGE_PATH + System.currentTimeMillis() + "." + getImageExt(imgUri));
+            StorageReference ref = mStorageRef.child(storage_path + System.currentTimeMillis() + "." + getImageExt(imgUri));
 
             //Add file to reference
-            ref.putFile(imgUri)
-
+            ref.putFile(imgUri, mUploadImageMetadata)
                     // Handle Success
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -112,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please select an image!", Toast.LENGTH_SHORT).show();
         }
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
