@@ -11,6 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import android.content.Intent;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -23,12 +24,18 @@ public class ImageListActivity extends AppCompatActivity {
     private ListView mListView;
     private ImageListAdapter adapter;
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_list);
         imgList = new ArrayList<>();
         mListView = (ListView) findViewById(R.id.listViewImage);
+
+        Intent mIntent = getIntent();
+        final String mSearchQuery = mIntent.getStringExtra("query");
+
+
         //Show progress dialog during list image loading
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait loading list image...");
@@ -45,7 +52,11 @@ public class ImageListActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     //ImageUpload class require default constructor
                     ImageUpload img = snapshot.getValue(ImageUpload.class);
-                    imgList.add(img);
+                    if(mSearchQuery != null ){
+                        if(img.name.equals(mSearchQuery) || mSearchQuery.isEmpty()) {
+                            imgList.add(img);
+                        }
+                    }
                 }
 
 
@@ -61,6 +72,8 @@ public class ImageListActivity extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+
+
 
     }
 }

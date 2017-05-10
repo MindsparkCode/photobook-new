@@ -139,4 +139,11 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this,GoogleSignInActivity.class);
         startActivity(i);
     }
+
+    public void btnSearchImage_Click(View v) {
+        Intent i = new Intent(MainActivity.this, ImageListActivity.class);
+        txtImageName = (EditText) findViewById(R.id.txtImageName);
+        i.putExtra("query", txtImageName.getText().toString());
+        startActivity(i);
+    }
 }
