@@ -53,6 +53,11 @@ public class ImageListActivity extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference(MainActivity.FB_DATABASE_PATH);
 
 
+         if(mUser==null){
+             mDatabaseRef = mDatabaseRef.child("public");
+         } else {
+             mDatabaseRef = mDatabaseRef.child("private");
+         }
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -73,21 +78,14 @@ public class ImageListActivity extends AppCompatActivity {
                     }
                 }
 
-
-                //Init adapter
                 adapter = new ImageListAdapter(ImageListActivity.this, R.layout.image_item, imgList);
-                //Set adapter for listview
                 mListView.setAdapter(adapter);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
                 progressDialog.dismiss();
             }
         });
-
-
-
     }
 }

@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCustomMetadata("Uri", imgUri.toString())
                 .setCustomMetadata("Description", txtImageName.getText().toString())
                 .build();
-        UploadPhotos("public/", mUploadImageMetadata);
+        UploadPhotos("public/", "public", mUploadImageMetadata);
     }
 
     public void btnUploadPrivate_Click(View v) {
@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 .setCustomMetadata("Uri", imgUri.toString())
                 .setCustomMetadata("Description", txtImageName.getText().toString())
                 .build();
-        UploadPhotos("private/" +  mUser.getUid() + "/", mUploadImageMetadata);
+        UploadPhotos("private/" +  mUser.getUid() + "/", "private" , mUploadImageMetadata);
 
     }
 
-    public void UploadPhotos(String storage_path, StorageMetadata mUploadImageMetadata) {
+    public void UploadPhotos(String storage_path, final String permission, StorageMetadata mUploadImageMetadata) {
 
         if (imgUri != null) {
             final ProgressDialog dialog = new ProgressDialog(this);
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Image uploaded", Toast.LENGTH_SHORT).show();
                             ImageUpload imageUpload = new ImageUpload(txtImageName.getText().toString(), taskSnapshot.getDownloadUrl().toString());
                             String uploadId = mDatabaseRef.push().getKey();
-                            mDatabaseRef.child(uploadId).setValue(imageUpload);
+                            mDatabaseRef.child(permission).child(uploadId).setValue(imageUpload);
                         }
                     })
                     // Handle Failure
