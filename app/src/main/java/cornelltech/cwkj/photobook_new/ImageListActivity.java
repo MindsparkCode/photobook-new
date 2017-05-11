@@ -4,22 +4,24 @@ package cornelltech.cwkj.photobook_new;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import android.content.Intent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 import java.util.ArrayList;
 
-
+/*
+* Show all images when search query is empty or
+* Show selected images matching search query
+*/
 public class ImageListActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabaseRef;
@@ -41,18 +43,16 @@ public class ImageListActivity extends AppCompatActivity {
         Intent mIntent = getIntent();
         final String mSearchQuery = mIntent.getStringExtra("query");
 
-
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
-        //Show progress dialog during list image loading
+        // Show the progress of loading images
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait loading list image...");
+        progressDialog.setMessage("Loading images...");
         progressDialog.show();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference(MainActivity.FB_DATABASE_PATH);
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference(MainActivity.firebase_database_path);
 
-
+        // Search in the right child database node according to the user login status
          if(mUser==null){
              mDatabaseRef = mDatabaseRef.child("public");
          } else {
@@ -64,14 +64,14 @@ public class ImageListActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
 
-                //Fetch image data from firebase database
+                // Iterate through the database records for  images to show in imgList
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     //ImageUpload class require default constructor
                     ImageUpload img = snapshot.getValue(ImageUpload.class);
 
-
+                    // Show an image when (a) search query is empty or
+                    // (b) the search query mateches image description
                     if(mSearchQuery != null ){
-                        // Find  images matching query or all images if query is null
                         if(img.name.equals(mSearchQuery) || mSearchQuery.isEmpty()) {
                             imgList.add(img);
                         }
@@ -84,6 +84,7 @@ public class ImageListActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                // Dismiss the progress of loading images
                 progressDialog.dismiss();
             }
         });
