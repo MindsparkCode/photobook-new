@@ -1,8 +1,12 @@
-# photobook-new 
+# Photobook: A photo-sharing Android app using Firebase 
 
-By NetIDs:
-ksa55
-mw866
+By NetIDs: ksa55 mw866
+
+Photobook helps users to store and share photos. There are two types of photos: Public (available to everyone) and Private (available to the user). Each of the photo has a short description. The app has four views:
+1. Photos — This part allows a user to look through photos that were uploaded by anyone and have a tag Public. If the user is authenticated then there should be additionally Private photos that were uploaded by this user. You don’t need to implement preview of photos, just make it a small rectangle with description (simple is better)
+2. Upload — A user can upload photos, provide description and tag them either Public or Private. You should use Firebase Database. Additionally, Security Rules should be used to manage access for photos on the Firebase level.
+3. Search — The user should look up the image by description. If the user is authenticated, then search is enabled for Private images, otherwise only Public images are available.
+4. Auth — User authenticates with the app using Email or Google Sign-in (OAuth). The authentication doesn’t happen at the start of the app and is voluntarily.
 
 ## Demo Video
 https://www.youtube.com/watch?v=qa_WkP5lYQ8
